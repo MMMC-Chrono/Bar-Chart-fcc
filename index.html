@@ -4,8 +4,72 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Bar Chart</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js" integrity="sha512-MefNfAGJ/pEy89xLOFs3V6pYPs6AmUhXJrRlydI/9wZuGrqxmrdQ80zKHUcyadAcpH67teDZcBeS6oMJLPtTqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
     </head>
     <body>
         <script src='https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'></script>
+        <script>
+            //data
+        fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json') 
+            .then(response => response.json())
+            .then(response => {
+                const { data } = response;
+                collectedData(data)
+                console.log({ data })
+            })
+    
+    function collectedData(data) {
+        const w = 500;
+        const h = 500;
+        const padding = 50;
+        const xScale = d3.scaleLinear()
+                         .domain([0, d3.max(data, (d) => d[1])])
+                         .range([padding, w - padding])
+        const yScale = d3.scaleLinear()
+                        .domain([0, d3.max(data, (d) => d[1])])
+                        .range([h, padding])
+            
+         
+        const svg = d3.select("body")
+                      .append("svg")
+                      .attr("width", w)
+                      .attr("height", h);
+            
+        svg.selectAll("rect")
+           .data(data)
+           .enter()
+           .append("rect")
+           .attr('class', 'bar')
+           .attr("x", (d, i) => xScale(i*70))
+           .attr("y", (d) => yScale(d[1]))
+           .attr('width', '1')
+           .attr('height', (d) => h - yScale(d[1]))
+           .append('title')
+           .text((d) => d)
+
+        const xAxis = d3.axisBottom((d) => d[0]);
+        const yAxis = d3.axisLeft(yScale)
+        svg.append('g')
+           .attr('transform', 'translate(' + (padding) + ',20)')
+           .call(yAxis)
+
+        d3.select('body')
+          .append('h1')
+          .text('title')
+          .attr('id', 'title')
+          .append('g')
+          .text('x-axis')
+          .attr('id', 'x-axis')
+          .append('g')
+          .text('y-axis')
+          .attr('id', 'y-axis')
+    } 
+    
+   
+
+        
+    
+        </script>
     </body>
 </html>
