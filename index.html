@@ -8,6 +8,7 @@
         
     </head>
     <body>
+        <div id="text"></div>
         <script src='https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'></script>
         <script>
 
@@ -21,11 +22,10 @@
             .then(response => {
                 const { data } = response;
                 collectedData(data)
-                console.log({ data })
             })
     
         function collectedData(data) {
-            const w = 500;
+            const w = 700;
             const h = 500;
             const padding = 50;
 
@@ -35,6 +35,10 @@
             const yScale = d3.scaleLinear()
                             .domain([0, d3.max(data, (d) => d[1])])
                             .range([h - padding, padding])
+
+            const scale = d3.scaleLinear()
+                            .domain([0, d3.max(data, (d) => d[1])])
+                            .range([padding, w - padding])
 
             const svg = d3.select("body")
                           .append("svg")
@@ -46,20 +50,21 @@
                .enter()
                .append("rect")
                .attr('class', 'bar')
-               .attr("x", (d, i) => w - yScale(i*66))
+               .attr("x", (d, i) => scale(i*66))
                .attr("y", (d) => yScale(d[1]))
                .attr('width', '1')
                .attr('height', (d) => h - yScale(d[1]) - padding)
+               .attr("data-date", (d) => d[0])
+               .attr('data-gdp', (d) => d[1])
                .append('title')
                .text((d) => `${d[0]}
-            ${d[1]}`)
+        ${d[1]}`)
 
             const xAxis = d3.axisBottom(xScale);
-            const yAxis = d3.axisLeft(yScale)
-
+            const yAxis = d3.axisLeft(yScale);
 
             svg.append('g')
-               .attr('transform', 'translate(0,' + (w - padding) + ')')
+               .attr('transform', 'translate(0,' + (h - padding) + ')')
                .attr('id', 'x-axis')
                .call(xAxis)
             svg.append('g')
@@ -67,10 +72,6 @@
                .attr('id', 'y-axis')
                .call(yAxis)
         } 
-    
-   
-
-        
     
         </script>
     </body>
