@@ -1,0 +1,8 @@
+
+.bar {
+    fill: #cc66ff;
+}
+.bar:hover {
+    fill: white;
+    z-index: 10;
+}
