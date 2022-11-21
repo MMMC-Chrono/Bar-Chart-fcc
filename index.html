@@ -23,13 +23,13 @@
         const w = 500;
         const h = 500;
         const padding = 50;
+        
         const xScale = d3.scaleLinear()
-                         .domain([0, d3.max(data, (d) => d[1])])
+                         .domain([d3.min(data, (d) => d[0][0]+d[0][1]+d[0][2]+d[0][3]), d3.max(data, (d) => d[0][0]+d[0][1]+d[0][2]+d[0][3])])
                          .range([padding, w - padding])
         const yScale = d3.scaleLinear()
                         .domain([0, d3.max(data, (d) => d[1])])
-                        .range([h, padding])
-            
+                        .range([h - padding, padding])
          
         const svg = d3.select("body")
                       .append("svg")
@@ -41,29 +41,31 @@
            .enter()
            .append("rect")
            .attr('class', 'bar')
-           .attr("x", (d, i) => xScale(i*70))
+           .attr("x", (d, i) => w - yScale(i*66))
            .attr("y", (d) => yScale(d[1]))
            .attr('width', '1')
-           .attr('height', (d) => h - yScale(d[1]))
+           .attr('height', (d) => h - yScale(d[1]) - padding)
            .append('title')
-           .text((d) => d)
+           .text((d) => `${d[0]}
+        ${d[1]}`)
 
-        const xAxis = d3.axisBottom((d) => d[0]);
+        const xAxis = d3.axisBottom(xScale);
         const yAxis = d3.axisLeft(yScale)
+        
+
         svg.append('g')
-           .attr('transform', 'translate(' + (padding) + ',20)')
+           .attr('transform', 'translate(0,' + (w - padding) + ')')
+           .attr('id', 'x-axis')
+           .call(xAxis)
+        svg.append('g')
+           .attr('transform', 'translate(' + (padding) + ',0)')
+           .attr('id', 'y-axis')
            .call(yAxis)
 
         d3.select('body')
           .append('h1')
           .text('title')
           .attr('id', 'title')
-          .append('g')
-          .text('x-axis')
-          .attr('id', 'x-axis')
-          .append('g')
-          .text('y-axis')
-          .attr('id', 'y-axis')
     } 
     
    
