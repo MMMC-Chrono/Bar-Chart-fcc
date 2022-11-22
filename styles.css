@@ -5,7 +5,9 @@ body {
     position: relative;
     display: flex;
     justify-content: center;
-
+    font-family: 'Arial';
+    background: whitesmoke;
+    font-size: 14px;
 }
 #title {
     position: absolute;
@@ -13,7 +15,7 @@ body {
 
 svg {
     position: absolute;
-    top: 100px;
+    top: 80px;
     background: whitesmoke;
     box-shadow: 0px 0px 7px 5px gray;
     font-size: 12px;
@@ -22,8 +24,6 @@ svg {
 
 #tooltip {
     fill: rgb(233, 202, 251);
-    color: red;
-    z-index: 10;
 }
 
 .bar {
@@ -31,4 +31,15 @@ svg {
 }
 .bar:hover {
     fill: white;
+}
+footer {
+    position: relative;
+    top: 500px;
+    text-align: center;
+    font-size: 12;
+}
+#gmail {
+    text-decoration: none;
+    color: #cc66ff;
+    cursor: pointer;
 }
