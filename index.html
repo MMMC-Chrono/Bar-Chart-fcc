@@ -54,18 +54,20 @@
                .attr('height', (d) => h - yScale(d[1]) - padding)
                .attr("data-date", (d) => d[0])
                .attr('data-gdp', (d) => d[1])
-               .on('mouseover', (d, i) => {
-                    tooltip.transition()
-                           .duration(100)
-                           .style('opacity', '1')
-                    const tooltipEl = document.getElementById('tooltip');
-                    tooltipEl.setAttribute('x', d.x+10)
-                    tooltipEl.setAttribute('y', 200)
+               .on('mouseover', (d, i) => {                   
+                    console.log(i)
+                    tooltip.style('opacity', '1')
+                           .attr('x', d.x+10)
+                           .attr('y', 200)
+                    label.text(i)
+                         .style('opacity', '1')
+                         .attr('x', d.x+12)
+                         .attr('y', 220)
+            
                })
                .on('mouseout', (d, i) => {
-                    tooltip.transition()
-                           .duration(200)
-                           .style('opacity', '0')
+                    tooltip.style('opacity', '0')
+                    label.style('opacity', '0')
                })
                
             const tooltip = svg.append('rect')
@@ -73,6 +75,11 @@
                                .attr('width', 100)
                                .attr('height', 50)
                                .style('opacity', '0')
+            const label = svg.append('text')
+                              .attr('x', 100)
+                              .attr('y', 100)
+                              .style('opacity', '0')
+            
             //Axis
             let dates = data.map((d) => {
                 return new Date(d[0])
