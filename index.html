@@ -15,7 +15,7 @@
 
         d3.select('body')
           .append('h1')
-          .text('title')
+          .text('United States GDP')
           .attr('id', 'title')
           
         fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json') 
@@ -26,16 +26,17 @@
             })
     
         function collectedData(data) {
-            const w = 700;
-            const h = 500;
-            const padding = 50;
+            const w = 600;
+            const h = 400;
+            const padding = 100;
+            const paddingTopBottom = 50;
 
             const xScale = d3.scaleLinear()
                              .domain([0, data.length - 1])
                              .range([padding, w - padding])
             const yScale = d3.scaleLinear()
                             .domain([0, d3.max(data, (d) => d[1])])
-                            .range([h - padding, padding])           
+                            .range([h - paddingTopBottom, paddingTopBottom])           
             
             const svg = d3.select("body")
                           .append("svg")
@@ -51,32 +52,40 @@
                .attr("x", (d, i) => xScale(i))
                .attr("y", (d) => yScale(d[1]))
                .attr('width', (w / data.length))
-               .attr('height', (d) => h - yScale(d[1]) - padding)
+               .attr('height', (d) => h - yScale(d[1]) - paddingTopBottom)
                .attr("data-date", (d) => d[0])
                .attr('data-gdp', (d) => d[1])
-               .on('mouseover', (d, i) => {                   
-                    console.log(i)
+               .on('mouseover', (d, i) => { 
                     tooltip.style('opacity', '1')
-                           .attr('x', d.x+10)
+                           .attr('x', d.layerX + 10)
                            .attr('y', 200)
-                    label.text(i)
-                         .style('opacity', '1')
-                         .attr('x', d.x+12)
-                         .attr('y', 220)
+                    dateLabel.text(i[0])
+                             .style('opacity', '1')
+                             .attr('x', d.layerX + 12)
+                             .attr('y', 220)
+                    dataLabel.text(`$ ${i[1]} Billions`)
+                             .style('opacity', '1')
+                             .attr('x', d.layerX + 12)
+                             .attr('y', 240)
                     document.querySelector('#tooltip').setAttribute('data-date', i[0])
             
                })
                .on('mouseout', (d, i) => {
                     tooltip.style('opacity', '0')
-                    label.style('opacity', '0')
+                    dateLabel.style('opacity', '0')
+                    dataLabel.style('opacity', '0')
                })
                
             const tooltip = svg.append('rect')
                                .attr('id', 'tooltip')
-                               .attr('width', 100)
+                               .attr('width', 80)
                                .attr('height', 50)
                                .style('opacity', '0')
-            const label = svg.append('text')
+            const dateLabel = svg.append('text')
+                              .attr('x', 100)
+                              .attr('y', 100)
+                              .style('opacity', '0')
+            const dataLabel = svg.append('text')
                               .attr('x', 100)
                               .attr('y', 100)
                               .style('opacity', '0')
@@ -94,7 +103,7 @@
             const yAxis = d3.axisLeft(yScale);
 
             svg.append('g')
-               .attr('transform', 'translate(0,' + (h - padding) + ')')
+               .attr('transform', 'translate(0,' + (h - paddingTopBottom) + ')')
                .attr('id', 'x-axis')
                .call(xAxis)
             svg.append('g')
