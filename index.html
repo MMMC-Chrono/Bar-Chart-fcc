@@ -84,11 +84,13 @@
                                    .attr('id', 'tooltip')
                                    .attr('width', 95)
                                    .attr('height', 50)
+                                   .attr('rx', '10')
+                                   .attr('stroke', 'gray')
                                    .style('opacity', '0')
                 const dateLabel = svg.append('text')
-                                  .style('opacity', '0')
+                                     .style('opacity', '0')
                 const dataLabel = svg.append('text')
-                                  .style('opacity', '0')
+                                     .style('opacity', '0')
                
                 //Axis
                 let dates = data.map((d) => {
