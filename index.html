@@ -4,115 +4,110 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Bar Chart</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js" integrity="sha512-MefNfAGJ/pEy89xLOFs3V6pYPs6AmUhXJrRlydI/9wZuGrqxmrdQ80zKHUcyadAcpH67teDZcBeS6oMJLPtTqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
         <link rel="stylesheet" href="styles.css">
         <script src="https://kit.fontawesome.com/ba7f655f8f.js" crossorigin="anonymous"></script>
     </head>
     <body>
-        <footer>
-            <address>
-                <span>created by <em>MayMyaMyaCin</em>.</span><br/>
-                <span>For freeCodeCamp's Data Visualization project</span><br/>
-                <span><i class="fa-solid fa-envelope"></i> <a id="gmail" href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqXxQVkcvhvwxQbxwqvMZVBGppnQnHZJGBkTrgFGJRjNHNNSGcDcXpGXZhbskSJZWscRBq" target="_blank">maymyamyacin@gmail.com</a></span>
-            </address>
-        </footer>
         <script src='https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'></script>
+
         <script>
-            d3.select('body')
-              .append('h1')
-              .text('United States GDP')
-              .attr('id', 'title')
-            
-            fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json') 
-                .then(response => response.json())
-                .then(response => {
-                    const { data } = response;
-                    collectedData(data)
-                })
-            
-            function collectedData(data) {
-                const w = 600;
-                const h = 400;
-                const padding = 100;
-                const paddingTopBottom = 50;
-
-                const xScale = d3.scaleLinear()
-                                 .domain([0, data.length - 1])
-                                 .range([padding, w - padding])
-                const yScale = d3.scaleLinear()
-                                .domain([0, d3.max(data, (d) => d[1])])
-                                .range([h - paddingTopBottom, paddingTopBottom])           
-
-                const svg = d3.select("body")
-                              .append("svg")
-                              .attr("width", w)
-                              .attr("height", h);
-
-                svg.selectAll("rect")
-                   .data(data)
-                   .enter()
-                   .append("rect")
-                   .attr('class', 'bar')
-                   .attr("x", (d, i) => xScale(i))
-                   .attr("y", (d) => yScale(d[1]))
-                   .attr('width', (w / data.length))
-                   .attr('height', (d) => h - yScale(d[1]) - paddingTopBottom)
-                   .attr("data-date", (d) => d[0])
-                   .attr('data-gdp', (d) => d[1])
-                   .on('mouseover', (d, i) => { 
-                        tooltip.style('opacity', '1')
-                               .attr('x', d.layerX + 7)
-                               .attr('y', 200)
-                        dateLabel.text(i[0])
-                                 .style('opacity', '1')
-                                 .attr('x', d.layerX + 9)
-                                 .attr('y', 220)
-                        dataLabel.text(`$${i[1]} Billions`)
-                                 .style('opacity', '1')
-                                 .attr('x', d.layerX + 9)
-                                 .attr('y', 240)
-                        document.querySelector('#tooltip').setAttribute('data-date', i[0])
-                
-                   })
-                   .on('mouseout', (d, i) => {
-                        tooltip.style('opacity', '0')
-                        dateLabel.style('opacity', '0')
-                        dataLabel.style('opacity', '0')
-                   })
-
-                const tooltip = svg.append('rect')
-                                   .attr('id', 'tooltip')
-                                   .attr('width', 95)
-                                   .attr('height', 50)
-                                   .attr('rx', '10')
-                                   .attr('stroke', 'gray')
-                                   .style('opacity', '0')
-                const dateLabel = svg.append('text')
-                                     .style('opacity', '0')
-                const dataLabel = svg.append('text')
-                                     .style('opacity', '0')
-               
-                //Axis
-                let dates = data.map((d) => {
-                    return new Date(d[0])
-                })
-            
-                const xAxisScale = d3.scaleTime()
-                                     .domain([d3.min(dates), d3.max(dates)])
-                                     .range([padding, w - padding])
-
-                const xAxis = d3.axisBottom(xAxisScale);
-                const yAxis = d3.axisLeft(yScale);
-
-                svg.append('g')
-                   .attr('transform', 'translate(0,' + (h - paddingTopBottom) + ')')
-                   .attr('id', 'x-axis')
-                   .call(xAxis)
-                svg.append('g')
-                   .attr('transform', 'translate(' + (padding) + ',0)')
-                   .attr('id', 'y-axis')
-                   .call(yAxis)
-            } 
+          d3.select('body')
+            .append('h1')
+            .text('United States GDP')
+            .attr('id', 'title')
+          fetch('https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json')
+            .then(response => response.json())
+            .then(response => {
+              const {
+                data
+              } = response;
+              collectedData(data)
+            })
+        
+          function collectedData(data) {
+            const w = 600;
+            const h = 400;
+            const padding = 50;
+            const paddingTopBottom = 10;
+            const xScale = d3.scaleLinear()
+              .domain([0, data.length - 1])
+              .range([padding, w - padding])
+            const yScale = d3.scaleLinear()
+              .domain([0, d3.max(data, (d) => d[1])])
+              .range([h - paddingTopBottom, padding])
+            const svg = d3.select("body")
+              .append("svg")
+              .attr("width", w)
+              .attr("height", h)
+              .attr('viewBox', '0 0 600 500')
+              .attr('preserveAspectRatio', 'xMidYMid meet')
+            svg.selectAll("rect")
+              .data(data)
+              .enter()
+              .append("rect")
+              .attr('class', 'bar')
+              .attr("x", (d, i) => xScale(i))
+              .attr("y", (d) => yScale(d[1]))
+              .attr('width', (w / data.length))
+              .attr('height', (d) => h - yScale(d[1]) - paddingTopBottom)
+              .attr("data-date", (d) => d[0])
+              .attr('data-gdp', (d) => d[1])
+              .on('mouseover', (d, i) => {
+                tooltip.style('opacity', '1')
+                  .attr('x', d.layerX + 7)
+                  .attr('y', 200)
+                dateLabel.text(i[0])
+                  .style('opacity', '1')
+                  .attr('x', d.layerX + 9)
+                  .attr('y', 220)
+                dataLabel.text(`$${i[1]} Billions`)
+                  .style('opacity', '1')
+                  .attr('x', d.layerX + 9)
+                  .attr('y', 240)
+                document.querySelector('#tooltip').setAttribute('data-date', i[0])
+              })
+              .on('mouseout', (d, i) => {
+                tooltip.style('opacity', '0')
+                dateLabel.style('opacity', '0')
+                dataLabel.style('opacity', '0')
+              })
+            const tooltip = svg.append('rect')
+              .attr('id', 'tooltip')
+              .attr('width', 95)
+              .attr('height', 50)
+              .attr('rx', '10')
+              .attr('stroke', 'gray')
+              .style('opacity', '0')
+            const dateLabel = svg.append('text')
+              .style('opacity', '0')
+            const dataLabel = svg.append('text')
+              .style('opacity', '0')
+            //Axis
+            let dates = data.map((d) => {
+              return new Date(d[0])
+            })
+            const xAxisScale = d3.scaleTime()
+              .domain([d3.min(dates), d3.max(dates)])
+              .range([padding, w - padding])
+            const xAxis = d3.axisBottom(xAxisScale);
+            const yAxis = d3.axisLeft(yScale);
+            svg.append('g')
+              .attr('transform', 'translate(0,' + (h - paddingTopBottom) + ')')
+              .attr('id', 'x-axis')
+              .call(xAxis)
+            svg.append('g')
+              .attr('transform', 'translate(' + (padding) + ',0)')
+              .attr('id', 'y-axis')
+              .call(yAxis)
+          }
         </script>
+        <footer>
+          <address>
+            <span>created by <em>MayMyaMyaCin</em>.</span><br />
+            <span>For freeCodeCamp's Data Visualization project</span><br />
+            <span><i class="fa-solid fa-envelope"></i> <a id="gmail" href="https://mail.google.com/mail/u/0/#inbox?compose=CllgCJqXxQVkcvhvwxQbxwqvMZVBGppnQnHZJGBkTrgFGJRjNHNNSGcDcXpGXZhbskSJZWscRBq" target="_blank">maymyamyacin@gmail.com</a></span>
+          </address>
+        </footer>
     </body>
 </html>
